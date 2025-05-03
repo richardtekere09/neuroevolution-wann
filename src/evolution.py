@@ -2,10 +2,12 @@ import gymnasium as gym
 import numpy as np
 from network import WANN
 from utils import evaluate_network, save_network, plot_fitness
+import json
+import networkx as nx
 
 
 def run_evolution(
-    generations=20,
+    generations=5,
     population_size=50,
     weight_candidates=[-2.0, -1.0, 0.0, 1.0, 2.0],
     render=False,
@@ -19,8 +21,9 @@ def run_evolution(
         fitness_scores = []
 
         for i, net in enumerate(population):
-            render_this = gen % 5 == 0 and i == 0
-            fitness = evaluate_network(net, env, weight_candidates, render=render_this)
+            fitness = evaluate_network(
+                net, env, weight_candidates, render=False
+            )  # no render during training
             fitness_scores.append(fitness)
 
         print(
@@ -28,7 +31,6 @@ def run_evolution(
         )
         fitness_history.append(np.mean(fitness_scores))
 
-        # Sort and create new population
         sorted_pairs = sorted(
             zip(fitness_scores, population), key=lambda x: x[0], reverse=True
         )
@@ -45,4 +47,29 @@ def run_evolution(
         save_network(population[0], gen)
 
     plot_fitness(fitness_history)
+    env.close()
+
+
+def play_best_agent(filepath, weight_candidates):
+    with open(filepath, "r") as f:
+        structure = json.load(f)
+
+    net = WANN()
+    net.graph = nx.node_link_graph(structure)
+
+    env = gym.make("BipedalWalker-v3", render_mode="human")
+
+    for w in weight_candidates:
+        obs, _ = env.reset()
+        done = False
+        total_reward = 0
+
+        while not done:
+            action = net.forward(obs, w)
+            obs, reward, terminated, truncated, _ = env.step(action)
+            total_reward += reward
+            done = terminated or truncated
+
+        print(f"Weight {w} -> reward: {total_reward}")
+
     env.close()

@@ -18,8 +18,7 @@ def evaluate_network(net, env, weight_values, render=False):
                 env.render()
             total_reward += reward
             done = terminated or truncated
-        if total_reward > best_reward:
-            best_reward = total_reward
+        best_reward = max(best_reward, total_reward)
     return best_reward
 
 
