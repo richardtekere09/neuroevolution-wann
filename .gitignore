@@ -1,0 +1,41 @@
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*.so
+*.pyd
+*.pyo
+
+# Virtual environment
+venv/
+ENV/
+env/
+.venv/
+
+# Mac system files
+.DS_Store
+
+# VS Code settings
+.vscode/
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Data/output artifacts
+*.log
+*.csv
+*.h5
+*.pkl
+*.json
+*.onnx
+*.npz
+*.npy
+output/
+data/
+
+# Plots, images, figures
+*.png
+*.jpg
+*.jpeg
+*.svg
+plots/
+
