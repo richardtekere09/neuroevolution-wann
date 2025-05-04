@@ -1,19 +1,18 @@
-import os
-import re
-from evolution import run_evolution, play_best_agent
+from evolution import run_evolution, get_top_generations
 
 if __name__ == "__main__":
+    # Step 1: Run evolution
     run_evolution(render=False)
 
-    # Automatically find the highest generation number
-    generation_files = [
-        f
-        for f in os.listdir("data")
-        if f.startswith("generation_") and f.endswith(".json")
-    ]
-    generation_nums = [int(re.findall(r"\d+", f)[0]) for f in generation_files]
-    best_generation = max(generation_nums)
-    best_filepath = f"data/generation_{best_generation}.json"
+    # Step 2: Evaluate all saved generations
+    print("\n🔍 Evaluating top generations...")
+    top_gens = get_top_generations()
 
-    print(f"Playing best agent from generation {best_generation}...\n")
-    play_best_agent(best_filepath, [-2.0, -1.0, 0.0, 1.0, 2.0])
+    # Step 3: Display top 3
+    print("\n🏆 Top 3 Generations by Fitness:")
+    for i, (gen, fitness) in enumerate(top_gens, 1):
+        print(f"{i}. Generation {gen} — Fitness: {fitness:.2f}")
+
+    # Step 4: Play/render best agent with shared weights
+    best_gen = top_gens[0][0]
+    best_path = f"data/generation_{best_gen}.json"

@@ -38,4 +38,4 @@ def visualize_network(filepath):
     plt.show()
 
 
-visualize_network("data/generation_10.json")
+visualize_network("data/generation_0.json")

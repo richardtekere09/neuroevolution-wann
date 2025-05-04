@@ -3,6 +3,7 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
+from network import WANN
 
 
 def evaluate_network(net, env, weight_values, render=False):
@@ -34,7 +35,16 @@ def plot_fitness(fitness_history, filename="plots/fitness.png"):
     plt.plot(fitness_history)
     plt.xlabel("Generation")
     plt.ylabel("Average Fitness")
-    plt.title("WANN Evolution Convergence")
+    plt.title("Basic WANN Evolution Convergence\n(Базовая конвергенция эволюции WANN)")
     plt.grid(True)
     plt.savefig(filename)
     plt.close()
+
+
+def load_network_from_file(filepath):
+    """Load a WANN network from a saved JSON file."""
+    with open(filepath, "r") as f:
+        structure = json.load(f)
+    net = WANN()
+    net.graph = nx.node_link_graph(structure)
+    return net
