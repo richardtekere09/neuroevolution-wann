@@ -1,10 +1,16 @@
+import sys
+import os
+import re
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import gymnasium as gym
 import numpy as np
 from network import WANN
-from utils import evaluate_network, save_network, plot_fitness, load_network_from_file
-import os
-import re
-
+from utils import (
+    evaluate_network,
+    save_network,
+    plot_fitness,
+    load_network_from_file,
+)
 
 def run_evolution(
     generations=101,
@@ -43,14 +49,23 @@ def run_evolution(
             new_population.append(child)
 
         population = new_population
-        save_network(population[0], gen)
+        save_network(
+            population[0],
+            gen,
+            folder="/Users/richard/neuroevolution-wann/src_improved_WANN/data",
+        )
 
-    plot_fitness(fitness_history)
+    plot_fitness(
+        fitness_history,
+        filename="/Users/richard/neuroevolution-wann/src_improved_WANN/plots/fitness_improved.png",
+    )
     env.close()
 
 
 def get_top_generations(
-    folder="data", shared_weights=[-2.0, -1.0, 0.0, 1.0, 2.0], top_n=3
+    folder="/Users/richard/neuroevolution-wann/src_improved_WANN/data",
+    shared_weights=[-2.0, -1.0, 0.0, 1.0, 2.0],
+    top_n=3,
 ):
     env = gym.make("BipedalWalker-v3")
     results = []
